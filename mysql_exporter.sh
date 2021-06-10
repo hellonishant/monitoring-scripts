@@ -18,39 +18,40 @@ mysql --host= localhost --user=root --password=${ROOT_PASSWD}  -e "source sql_cr
 echo "[client]
 user=mysqld_exporter
 password=StrongPassword
-" > /etc/.mysql_exporter.cnf
+" > /etc/.mysqld_exporter.cnf
 
 chown root:prometheus /etc/.mysqld_exporter.cnf
 
+useradd -rs /bin/false mysqld_exporter
 # Create systemd service file.
 echo "[Unit]
 Description=Prometheus MySQL Exporter
 After=network.target
-User=prometheus
-Group=prometheus
+User=mysqld_exporter
+Group=mysqld_exporter
 
 [Service]
 Type=simple
 Restart=always
-ExecStart=/usr/local/bin/mysqld_exporter \
---config.my-cnf /etc/.mysqld_exporter.cnf \
---collect.global_status \
---collect.info_schema.innodb_metrics \
---collect.auto_increment.columns \
---collect.info_schema.processlist \
---collect.binlog_size \
---collect.info_schema.tablestats \
---collect.global_variables \
---collect.info_schema.query_response_time \
---collect.info_schema.userstats \
---collect.info_schema.tables \
---collect.perf_schema.tablelocks \
---collect.perf_schema.file_events \
---collect.perf_schema.eventswaits \
---collect.perf_schema.indexiowaits \
---collect.perf_schema.tableiowaits \
---collect.slave_status \
+ExecStart=/usr/local/bin/mysqld_exporter \\
+--config.my-cnf /etc/.mysqld_exporter.cnf \\
+--collect.global_status \\
+--collect.info_schema.innodb_metrics \\
+--collect.auto_increment.columns \\
+--collect.info_schema.processlist \\
+--collect.binlog_size \\
+--collect.info_schema.tablestats \\
+--collect.global_variables \\
+--collect.info_schema.query_response_time \\
+--collect.info_schema.userstats \\
+--collect.info_schema.tables \\
+--collect.perf_schema.tablelocks \\
+--collect.perf_schema.file_events \\
+--collect.perf_schema.eventswaits \\
+--collect.perf_schema.indexiowaits \\
+--collect.perf_schema.tableiowaits \\
+--collect.slave_status \\
 --web.listen-address=0.0.0.0:9104
 
 [Install]
-WantedBy=multi-user.target" > /etc/system/systemd/mysql_exporter.service
+WantedBy=multi-user.target" > /etc/system/systemd/mysqld_exporter.service

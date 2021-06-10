@@ -3,8 +3,11 @@
 apt update
 apt install wget
 
-./node_exporter
-./apache_exporter
+chmod +x node_exporter.sh
+chmod +x apache_exporter.sh
+
+./node_exporter.sh
+./apache_exporter.sh
 
 systemctl daemon-reload
 systemctl enable node_exporter

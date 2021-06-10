@@ -9,6 +9,8 @@ cd apache_exporter-0.8.0.linux-amd64/
 cp apache_exporter /usr/local/bin/
 chmod +x /usr/local/bin/apache_exporter
 
+
+useradd -rs /bin/false apache_exporter
 echo "[Unit]
 Description=Prometheus
 Documentation=https://github.com/Lusitaniae/apache_exporter
@@ -17,13 +19,13 @@ After=network-online.target
 
 [Service]
 Type=simple
-User=prometheus
-Group=prometheus
-ExecReload=/bin/kill -HUP $MAINPID
-ExecStart=/usr/local/bin/apache_exporter \
-  --insecure \
-  --scrape_uri=http://localhost/server-status/?auto \
-  --telemetry.address=0.0.0.0:9117 \
+User=apache_exporter
+Group=apache_exporter
+ExecReload=/bin/kill -HUP \$MAINPID
+ExecStart=/usr/local/bin/apache_exporter \\
+  --insecure \\
+  --scrape_uri=http://localhost/server-status/?auto \\
+  --telemetry.address=0.0.0.0:9117 \\
   --telemetry.endpoint=/metrics
 
 SyslogIdentifier=apache_exporter
