@@ -19,5 +19,8 @@ systemctl status node_exporter
 systemctl start apache_exporter
 systemctl status apache_exporter
 
+ufw allow from 139.177.179.224 to any port 9100
+ufw allow from 139.177.179.224 to any port 9117
+
 echo "Node expoter is running on *:9100"
-echo "Apache expoter is running on *:9104"
+echo "Apache expoter is running on *:9117"
