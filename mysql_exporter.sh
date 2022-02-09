@@ -6,7 +6,7 @@ read -sp 'Enter the password for admin user: ' -r ADMIN_PASS
 read -sp 'Enter the password for mysqld_exporter user' -r MYSQLD_PASS
 
 #TODO: Find how to take password from user input when running the script.
-"CREATE USER 'mysqld_exporter'@'localhost' IDENTIFIED BY ${MYSQLD_PASS} WITH MAX_USER_CONNECTIONS 3;
+echo "CREATE USER 'mysqld_exporter'@'localhost' IDENTIFIED BY ${MYSQLD_PASS} WITH MAX_USER_CONNECTIONS 3;
 GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'mysqld_exporter'@'localhost';
 FLUSH PRIVILEGES;" >sql_create_user.sql
 
