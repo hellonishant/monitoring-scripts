@@ -1,15 +1,23 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+read -p 'Installing apache_exporter. Do you want to continue? [y/n] ' -n 1 -r
+printf '\n'
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+fi
 
-cd /tmp
-APACHE_EXPORTER=apache_exporter-0.8.0.linux-amd64
-wget https://github.com/Lusitaniae/apache_exporter/releases/download/v0.8.0/${APACHE_EXPORTER}.tar.gz
-tar xzf apache_exporter-0.8.0.linux-amd64.tar.gz
-cd apache_exporter-0.8.0.linux-amd64/
+VERSION=0.11.0
+APACHE_EXPORTER="apache_exporter-${VERSION}.linux-amd64"
+
+# Download apache exporter
+cd /tmp || exit
+wget https://github.com/Lusitaniae/apache_exporter/releases/download/"v${VERSION}"/"${APACHE_EXPORTER}.tar.gz"
+tar xzf "$APACHE_EXPORTER.tar.gz"
+cd "$APACHE_EXPORTER" || exit
 cp apache_exporter /usr/local/bin/
 chmod +x /usr/local/bin/apache_exporter
 
-
+# Create a service file
 useradd -rs /bin/false apache_exporter
 echo "[Unit]
 Description=Prometheus
@@ -33,4 +41,4 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
-" > /etc/systemd/system/apache_exporter.service
+" >/etc/systemd/system/apache_exporter.service

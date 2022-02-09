@@ -1,9 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+read -p 'Installing node_exporter. Do you want to continue? [y/n] ' -n 1 -r
+printf '\n'
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+fi
 
-cd /tmp
-NODE_EXPORTER=node_exporter-1.1.2.linux-amd64
-wget "https://github.com/prometheus/node_exporter/releases/download/v1.1.2/${NODE_EXPORTER}.tar.gz"
+VERSION=1.3.1
+cd /tmp || exit
+NODE_EXPORTER="node_exporter-${VERSION}.linux-amd64"
+wget "https://github.com/prometheus/node_exporter/releases/download/"v${VERSION}"/${NODE_EXPORTER}.tar.gz"
 
 tar -xvf ${NODE_EXPORTER}.tar.gz
 mv ${NODE_EXPORTER}/node_exporter /usr/local/bin/
@@ -20,7 +26,7 @@ Type=simple
 ExecStart=/usr/local/bin/node_exporter
 
 [Install]
-WantedBy=multi-user.target" > /etc/systemd/system/node_exporter.service
+WantedBy=multi-user.target" >/etc/systemd/system/node_exporter.service
 
 systemctl daemon-reload
 systemctl start node_exporter
